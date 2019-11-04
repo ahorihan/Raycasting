@@ -12,6 +12,9 @@ public class Canvas extends JPanel{
 	private List<Ray> rays;
 	private JFrame frame;
 	
+	public int originX = 250;
+	public int originY = 250;
+	
 	public void paint(Graphics g)
 	{
 		g.setColor(Color.BLACK); //Draw Background
@@ -27,7 +30,6 @@ public class Canvas extends JPanel{
 		{
 			g.setColor(Color.WHITE);
 			g.drawLine((int)r.tail.getX(), (int)r.tail.getY(), (int)r.head.getX(), (int)r.head.getY());
-			g.drawLine((int)r.tail.getX(), (int)r.tail.getY(), -1*(int)r.head.getX(), -1*(int)r.head.getY());
 		}
 	}
 	
@@ -37,21 +39,11 @@ public class Canvas extends JPanel{
 		rays = r;
 	}
 	
-	public static void main(String[] args) //Setup goes here, may change this later.
-	{
-		List<Boundary> lines = new ArrayList<>();
-		lines.add(new Boundary(300, 100, 300, 300));
-		
-		int originX = 250;
-		int originY = 250;
-		
-		List<Ray> rays = new ArrayList<>();
-		for(int i = 0; i < 180; i+=5)
-		{
-			rays.add(new Ray(originX, originY, i));
-		}
-		
-		new Canvas(lines, rays).go();
+	public static void main(String[] args)
+	{		
+		List<Boundary> tempLine = new ArrayList<>();
+		List<Ray> tempRay = new ArrayList<>();
+		new Canvas(tempLine, tempRay).go();
 	}
 	
 	public void go()
@@ -62,6 +54,31 @@ public class Canvas extends JPanel{
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
+		frame.addMouseMotionListener(new Handler(this));
+		
+		List<Boundary> lines = new ArrayList<>();		
+		lines.add(new Boundary((int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random())));
+		lines.add(new Boundary((int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random())));
+		lines.add(new Boundary((int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random())));
+		lines.add(new Boundary((int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random())));
+		lines.add(new Boundary((int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random()), (int)(500*Math.random())));
+		
+		boundaries = lines;
+		
+		while(true) //Setup goes here, may change this later.
+		{	
+			List<Ray> r1 = new ArrayList<>();
+			for(int i = 0; i < 360; i+=1)
+			{
+				Ray newRay = new Ray(originX, originY, i);
+				newRay.cast(lines);
+				r1.add(newRay);
+			}
+			
+			rays = r1;
+			
+			repaint();
+		}
 	}
 	
 }
